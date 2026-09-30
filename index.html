@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><title>Redirecting...</title></head>
+<body>
+<script>
+(async function() {
+  const slug = window.location.pathname.replace(/^\/|\/$/g, '');
+  if (!slug) { document.body.textContent = 'No link.'; return; }
+  const shard = slug.slice(0, 2).toLowerCase();
+  try {
+    const res = await fetch('/data/' + shard + '.json');
+    if (!res.ok) throw new Error('not found');
+    const links = await res.json();
+    if (links[slug]) {
+      window.location.replace(links[slug]);
+    } else {
+      document.body.textContent = 'Link not found.';
+    }
+  } catch (e) {
+    document.body.textContent = 'Link not found.';
+  }
+})();
+</script>
+</body>
+</html>
